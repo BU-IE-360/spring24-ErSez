@@ -1,6 +1,6 @@
 ## Welcome to my GitHub Page
-It is Erce Sezgün. I am currently an undergraduate in Bogazici University's Industrial Engineering department. Here are some works that I have made in one of the courses that I take. 
-
+Hello! It is Erce Sezgün. I am currently an undergraduate in Bogazici University's Industrial Engineering department. Here are some works that I have made in one of the courses that I take. 
+You can reach out to my journal from the link below:
 [link to my journal](https://bu-ie-360.github.io/spring24-ErSez/): 
 Here is my first homework:
 [homework1](HW1/IE360_Assignment1.html)
