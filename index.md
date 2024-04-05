@@ -7,7 +7,7 @@ You can reach out to my journal from the link below:
 
 ###Here is my first homework:
 
-[homework1](HW1/IE360_Assignment1.html)
+[Homework1](HW1/IE360_Assignment1.html) is the first homework that I have done. It was an introduction to linear regression and data manipulation for me. 
 
 
 You can use the editor on GitHub to maintain and preview the content for your website in Markdown files.
