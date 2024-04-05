@@ -5,7 +5,7 @@ You can reach out to my journal from the link below:
 
 [link to my journal](https://bu-ie-360.github.io/spring24-ErSez/): 
 
-Here is my first homework:
+###Here is my first homework:
 
 [homework1](HW1/IE360_Assignment1.html)
 
