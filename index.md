@@ -1,3 +1,8 @@
+
+
+[link to my journal](https://bu-ie-360.github.io/spring24-ErSez/): This is the link you need to provide for HW0.
+
+
 ## Welcome to GitHub Pages
 
 You can use the editor on GitHub to maintain and preview the content for your website in Markdown files.
