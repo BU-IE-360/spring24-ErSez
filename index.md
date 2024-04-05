@@ -1,9 +1,10 @@
+## Welcome to my GitHub Page
+It is Erce Sezgün. I am currently an undergraduate in Bogazici University's Industrial Engineering department. Here are some works that I have made in one of the courses that I take. 
 
-
-[link to my journal](https://bu-ie-360.github.io/spring24-ErSez/): This is the link you need to provide for HW0.
-
+[link to my journal](https://bu-ie-360.github.io/spring24-ErSez/): 
+Here is my first homework:
 [homework1](HW1/IE360_Assignment1.html)
-## Welcome to GitHub Pages
+
 
 You can use the editor on GitHub to maintain and preview the content for your website in Markdown files.
 
