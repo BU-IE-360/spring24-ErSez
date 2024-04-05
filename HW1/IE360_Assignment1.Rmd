@@ -1,0 +1,251 @@
+---
+title: "IE_360_Assignment1_Erce_Sezgun"
+author: "me"
+date: "2024-02-22"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+# -IE 360 Assignment 1 *-*
+
+### by *Erce Sezgün 2020402174*
+
+-   In this assignment there are three data that have taken from the internet and one by one modeled. Employment rate, accommodation costs, and manufacturing industry capacity utilization rate. Before going to the questions that asked for the models and data that used for them, it is needed to check if they are correlated to each other and if they are higher than 0.5 we have to reject and find other topic to discuss.
+
+```{r}
+require(data.table)
+require(lubridate)
+require(forecast)
+require(skimr)
+require(repr)
+require(readxl)
+library(ggplot2)
+require(GGally)
+require(ggcorrplot)
+require(forecast)
+```
+
+-   In the block below it is tested if topics are correlated to each other or not. Apparently all the topics have less correlation than the value 0,5. Process can continue.
+
+```{r}
+Topics <- read_excel("C://Users/erces/Documents/Topics.xlsx")
+topics <- Topics
+topics=data.table(topics)
+ggpairs(topics)
+correl_info=cor(topics)
+
+ggcorrplot(correl_info, 
+           hc.order = TRUE, 
+           type = "lower",
+           lab = TRUE)
+```
+
+# 1)Employment Rate
+
+-   Firstly, the employment rate is analyzed whether or not they can be analyzed by the house renting prices and up to 1 year maturity deposits opened in Turkish Lira. Idea behind it is that the rise in the rental prices can cause unemployed people to be employed and urge them to work. In the other hand, deposit levels can also effect people as they might choose unemployment if they had enough money in their bank accounts.
+
+```{r}
+
+
+options(repr.plot.width=12.7, repr.plot.height=8.5)
+data_path_2=read_excel("C://Users/erces/Documents/ISGUCU.xlsx")
+emp_rate=data.table(data_path_2)
+head(emp_rate,25)
+
+```
+
+-   In the graph of ISGUCU or employment rate there is a clear trend upwards and a seasonality. Note that in COVID times there is a significant decrease in the employment rate.
+
+-   Now correlation between dependent and independent variables are examined below. While there is meaningful correlation between employment with rental prices and deposit levels. It seems that total number of house sold is not helping.
+
+```{r}
+evds_for_correlation <- read_excel("C://Users/erces/Documents/evds_for_correlation.xlsx")
+
+ggpairs(evds_for_correlation)
+correl_info=cor(evds_for_correlation)
+
+ggcorrplot(correl_info, 
+           hc.order = TRUE, 
+           type = "lower",
+           lab = TRUE)
+
+```
+
+-   Now check the employment rate, it will be called as ISGUCU from now on, graph for general idea for the data. It is clear that data has some trend and seasonality.
+
+```{r}
+ggplot(emp_rate ,aes(x=(Tarih),y=(ISGUCU))) + geom_line()
+
+```
+
+-   Lets start by putting VADELI and KIRA to the model and see the results.
+
+```{r}
+
+
+l_fit = lm(ISGUCU~VADELI+KIRA,data=emp_rate)
+l_fit
+summary(l_fit)
+plot(l_fit)
+```
+
+```{r}
+checkresiduals(l_fit,12)
+```
+
+-   In the sum above there is great indication for the seasonality.
+
+-   New seasonality variables are added to improve the model
+
+```{r}
+emp_rate[,trnd:=1:.N]
+emp_rate[,mon:=as.character(month(Tarih,label=T))]
+emp_rate[,yıl:=as.character(year(Tarih))]
+
+l_fit = lm(ISGUCU~VADELI+KIRA+yıl+mon,data=emp_rate)
+l_fit
+summary(l_fit)
+plot(l_fit)
+```
+
+```{r}
+checkresiduals(l_fit,12)
+```
+
+-   The R-squared value increased significantly and the residuals are looking better than the first trial. Residuals are also very close to the assumption of Normally distributed.
+
+# 2)Second Model
+
+-   In the second model, accommodation costs are in the spotlight. Question is that whether or not accommodation costs can be modeled using rent-a-car level, suitability of the current period to save money and number of buildings that are higher than 2 floors.
+
+```{r}
+konaklama=read_excel("C://Users/erces/Documents/EVDS_5_.xlsx")
+konaklama=data.table(konaklama)
+konaklama$Tarih <- ym(konaklama$Tarih)
+head(konaklama,25)
+
+```
+
+-   Examining the graph of the accommodation costs, there are seasonality and trend. We can also say that variance of the data is increasing which indicates use of logarithms.
+
+```{r}
+ggplot(konaklama ,aes(x=(Tarih),y=(KONAKLAMA))) + geom_line()
+
+
+```
+
+-   In the correlation table it is understood that number of buildings is not going to help us in the model.
+
+```{r}
+konaklama_correlation <- read_excel("C://Users/erces/Documents/konaklama_correlation.xlsx")
+ggpairs(konaklama_correlation)
+correl_info=cor(konaklama_correlation)
+
+ggcorrplot(correl_info, 
+           hc.order = TRUE, 
+           type = "lower",
+           lab = TRUE)
+```
+
+```{r}
+konaklama$KONAKLAMA <- log(konaklama$KONAKLAMA)
+konaklama[,trnd:=1:.N]
+konaklama[,mon:=as.character(month(Tarih,label=T))]
+konaklama[,yıl:=as.character(year(Tarih))]
+
+l_fit = lm(KONAKLAMA~ARABAKIRA+TASARRUF+mon+yıl,data=konaklama)
+l_fit
+summary(l_fit)
+plot(l_fit)
+```
+
+-   Our R-squared value is 0.8497. From coefficient table it is understood that TASARRUF is not that much helping in the model as it has very large Pr(\>\|t\|).
+
+```{r}
+acf(l_fit$residual)
+```
+
+```{r}
+
+checkresiduals(l_fit,12)
+```
+
+-   Residuals seem reasonable but there is a out-liner in the COVID area that may effect our results.
+
+```{r}
+konaklama$fitted <- fitted(l_fit)
+konaklama$residual <- residuals(l_fit)
+cols <- c("predicted" = "orange","actual" = "blue")
+ggplot() +
+  geom_line(data = konaklama, aes(x = Tarih,y = fitted, color = "predicted")) +
+  geom_line(data = konaklama, aes(x = Tarih,y = KONAKLAMA, color = "actual")) +
+  xlab("Month") +
+  ylab("Log Sales") +
+  scale_color_manual(values = cols)
+```
+
+-   Our model is looking similar to the actual data however, it is mistaken in the COVID period which may effect our overall result.
+
+# 3)Third Model
+
+-   In the third model it is examined if the manufacturing industry capacity utilization rate can be modeled by the data of Euro-TL exchange rate, food price index, and exported food value index.
+
+```{r}
+gıda=read_excel("C://Users/erces/Documents/EVDS (6).xlsx")
+gıda=data.table(gıda)
+gıda$Tarih <- ym(gıda$Tarih)
+head(gıda,25)
+
+```
+
+-   There may be some seasonality with the data and a slight trend.
+
+```{r}
+ggplot(gıda ,aes(x=(Tarih),y=(IMALAT))) + geom_line()
+```
+
+```{r}
+gıda_corelation <- read_excel("C://Users/erces/Documents/gıda_corelation.xlsx")
+ggpairs(gıda_corelation)
+correl_info=cor(gıda_corelation)
+
+ggcorrplot(correl_info, 
+           hc.order = TRUE, 
+           type = "lower",
+           lab = TRUE)
+```
+
+-   Doing similar model with previous one.
+
+```{r}
+gıda[,trnd:=1:.N]
+gıda[,mon:=as.character(month(Tarih,label=T))]
+gıda[,yıl:=as.character(year(Tarih))]
+l_fit = lm(IMALAT~GIDAFIYAT+ITHALGIDA+EUR_TL+yıl+mon,data=gıda)
+l_fit
+summary(l_fit)
+plot(l_fit)
+```
+
+-   R value is not as high as the previously made models, that may tell us that independent variables were not that explanatory at some parts for our data.
+
+```{r}
+checkresiduals(l_fit,12)
+```
+
+```{r}
+gıda$fitted <- fitted(l_fit)
+gıda$residual <- residuals(l_fit)
+cols <- c("predicted" = "orange","actual" = "blue")
+ggplot() +
+  geom_line(data = gıda, aes(x = Tarih,y = fitted, color = "predicted")) +
+  geom_line(data = gıda, aes(x = Tarih,y = IMALAT, color = "actual")) +
+  xlab("Month") +
+  ylab("imalat") +
+  scale_color_manual(values = cols)
+```
+
+## Conclusion
+
+In conclusion we made three models that are using different dependent variables with their respective independent variables. All the dependent variables had seasonality related to their data. Logarithm of the Accommodation data had to be taken to neutralize the increase in the variation. On the other hand all the models have negatively affected by the Covid period data as my models could not reason the fall in the data in that period.
