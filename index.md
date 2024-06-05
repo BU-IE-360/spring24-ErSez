@@ -9,6 +9,7 @@ You can reach out to my journal from the link below:
 
 [Homework1](HW1/IE360_Assignment1.html) is the first homework that I have done. It was an introduction to linear regression and data manipulation for me. 
 
+### Here is my Term Project:
 [Term Project](Project/IE360Final.html) is the term project.
 
 
