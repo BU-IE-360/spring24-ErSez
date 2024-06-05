@@ -14,6 +14,8 @@ You can reach out to my journal from the link below:
 [Term Project](Project/IE360Final.html) is the term project.
 There is also rmd verison of the [Term Project](Project/IE360Final_.rmd)
 
+[aaa](https://github.com/BU-IE-360/spring24-ErSez/blob/main/Project/IE360Final.html)
+
 ### Support or Contact
 
 Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
