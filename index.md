@@ -11,7 +11,7 @@ You can reach out to my journal from the link below:
 
 ### Here is my Term Project:
 [Term Project](Project/IE360Final.html) is the term project.
-
+There is also rmd verison of the [Term Project](Project/IE360Final_.rmd)
 
 ### Support or Contact
 
